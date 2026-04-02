@@ -1,0 +1,63 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: revio_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-revio}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-revio_secret}
+      POSTGRES_DB: ${DB_NAME:-revio}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/migrations:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-revio}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: revio_backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: ${DB_USER:-revio}
+      DB_PASSWORD: ${DB_PASSWORD:-revio_secret}
+      DB_NAME: ${DB_NAME:-revio}
+      DB_SSLMODE: disable
+      JWT_SECRET: ${JWT_SECRET:-change_this_in_production_min_32_chars}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
+      GITHUB_REDIRECT_URL: ${GITHUB_REDIRECT_URL:-http://localhost:8080/api/auth/github/callback}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+      PORT: 8080
+      ENV: ${ENV:-development}
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: revio_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8080}
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres_data:
