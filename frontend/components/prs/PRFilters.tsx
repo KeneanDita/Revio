@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/select";
 import { useRepos } from "@/hooks/useRepos";
 import type { PRFilters } from "@/types";
+
+const ALL = "all";
 
 interface PRFiltersProps {
   filters: PRFilters;
@@ -37,16 +39,20 @@ export function PRFiltersBar({ filters, onChange }: PRFiltersProps) {
       </div>
 
       <Select
-        value={filters.status ?? ""}
+        value={filters.status || ALL}
         onValueChange={(v) =>
-          onChange({ ...filters, status: v as PRFilters["status"], page: 1 })
+          onChange({
+            ...filters,
+            status: v === ALL ? "" : (v as PRFilters["status"]),
+            page: 1,
+          })
         }
       >
         <SelectTrigger className="w-36">
           <SelectValue placeholder="All statuses" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">All statuses</SelectItem>
+          <SelectItem value={ALL}>All statuses</SelectItem>
           <SelectItem value="open">Open</SelectItem>
           <SelectItem value="merged">Merged</SelectItem>
           <SelectItem value="closed">Closed</SelectItem>
@@ -54,16 +60,16 @@ export function PRFiltersBar({ filters, onChange }: PRFiltersProps) {
       </Select>
 
       <Select
-        value={filters.repo_id ?? ""}
+        value={filters.repo_id || ALL}
         onValueChange={(v) =>
-          onChange({ ...filters, repo_id: v, page: 1 })
+          onChange({ ...filters, repo_id: v === ALL ? "" : v, page: 1 })
         }
       >
         <SelectTrigger className="w-52">
           <SelectValue placeholder="All repositories" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">All repositories</SelectItem>
+          <SelectItem value={ALL}>All repositories</SelectItem>
           {repos.map((r) => (
             <SelectItem key={r.id} value={r.id}>
               {r.full_name}
