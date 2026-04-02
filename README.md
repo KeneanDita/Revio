@@ -2,8 +2,6 @@
 
 A production-ready pull request management and analytics platform built with Go and Next.js.
 
----
-
 ## Overview
 
 Revio integrates with GitHub to provide teams with a unified view of pull request activity, review performance, and engineering workflow insights.
@@ -17,8 +15,6 @@ Revio integrates with GitHub to provide teams with a unified view of pull reques
 - Time-range filtering and trend charts
 - Light and dark theme support
 - Webhook-based real-time updates
-
----
 
 ## Tech Stack
 
@@ -34,8 +30,6 @@ Revio integrates with GitHub to provide teams with a unified view of pull reques
 | Auth       | JWT + GitHub OAuth2                     |
 | Container  | Docker, Docker Compose                  |
 
----
-
 ## Prerequisites
 
 - [Docker](https://www.docker.com/) 24+ and Docker Compose v2
@@ -43,14 +37,12 @@ Revio integrates with GitHub to provide teams with a unified view of pull reques
 - [Node.js](https://nodejs.org/) 20+ (for local frontend development)
 - A GitHub OAuth App ([create one here](https://github.com/settings/developers))
 
----
-
 ## Quick Start (Docker)
 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-org/revio.git
+git clone https://github.com/keneandita/revio.git
 cd revio
 ```
 
@@ -77,8 +69,6 @@ Services will be available at:
 - Frontend: http://localhost:3000
 - Backend API: http://localhost:8080
 - PostgreSQL: localhost:5432
-
----
 
 ## Local Development (without Docker)
 
@@ -108,8 +98,6 @@ Run PostgreSQL locally and apply the migration:
 psql -U revio -d revio -f backend/migrations/001_initial.sql
 ```
 
----
-
 ## Project Structure
 
 ```
@@ -137,8 +125,6 @@ revio/
 ├── .env.example
 └── README.md
 ```
-
----
 
 ## API Reference
 
@@ -182,8 +168,6 @@ revio/
 |--------|-------------------------|--------------------------------|
 | POST   | /api/webhooks/github    | GitHub webhook receiver        |
 
----
-
 ## GitHub OAuth App Setup
 
 1. Go to GitHub Settings > Developer settings > OAuth Apps > New OAuth App
@@ -191,8 +175,6 @@ revio/
 3. Set **Authorization callback URL** to `http://localhost:8080/api/auth/github/callback`
 4. Copy the Client ID and generate a Client Secret
 5. Add both to your `.env` file
-
----
 
 ## Environment Variables
 
