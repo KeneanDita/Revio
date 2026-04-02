@@ -114,14 +114,14 @@ export default function PRDetailPage() {
               <h1 className="text-xl font-bold leading-tight">{pr.title}</h1>
               <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
                 <Badge variant={cfg.variant}>{cfg.label}</Badge>
-                {pr.Repo && (
+                {pr.repo && (
                   <a
-                    href={pr.Repo.html_url}
+                    href={pr.repo.html_url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="font-medium text-foreground hover:underline"
                   >
-                    {pr.Repo.full_name}
+                    {pr.repo.full_name}
                   </a>
                 )}
                 <span>#{pr.number}</span>

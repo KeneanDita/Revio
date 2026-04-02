@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { useAuth } from "@/hooks/useAuth";
 import { Skeleton } from "@/components/ui/skeleton";
+import { saveToken } from "@/lib/auth";
 
 export default function DashboardLayout({
   children,
@@ -13,6 +15,21 @@ export default function DashboardLayout({
 }) {
   const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const queryClient = useQueryClient();
+
+  // Capture the token appended by the GitHub OAuth callback (?token=...)
+  useEffect(() => {
+    const token = searchParams.get("token");
+    if (token) {
+      saveToken(token);
+      queryClient.invalidateQueries({ queryKey: ["auth", "me"] });
+      // Remove the token from the URL without a full page reload
+      const url = new URL(window.location.href);
+      url.searchParams.delete("token");
+      window.history.replaceState({}, "", url.toString());
+    }
+  }, [searchParams, queryClient]);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {

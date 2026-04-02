@@ -22,7 +22,7 @@ type Repository struct {
 	UpdatedAt   time.Time  `json:"updated_at"`
 	DeletedAt   gorm.DeletedAt `gorm:"index" json:"-"`
 
-	User         User          `gorm:"foreignKey:UserID" json:"-"`
+	User         User          `gorm:"foreignKey:UserID" json:"-"` // intentionally hidden — don't expose tokens
 	PullRequests []PullRequest `gorm:"foreignKey:RepoID" json:"-"`
 }
 

@@ -42,7 +42,7 @@ type PullRequest struct {
 	CreatedAt        time.Time  `json:"created_at"`
 	UpdatedAt        time.Time  `json:"updated_at"`
 
-	Repo    Repository `gorm:"foreignKey:RepoID" json:"-"`
+	Repo    Repository `gorm:"foreignKey:RepoID" json:"repo,omitempty"`
 	Reviews []Review   `gorm:"foreignKey:PRID" json:"reviews,omitempty"`
 }
 

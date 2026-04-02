@@ -61,9 +61,9 @@ export function PRCard({ pr }: PRCardProps) {
         </div>
 
         <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
-          {pr.Repo && (
+          {pr.repo && (
             <span className="font-medium text-foreground/70">
-              {pr.Repo.full_name}
+              {pr.repo.full_name}
             </span>
           )}
           <span>#{pr.number}</span>

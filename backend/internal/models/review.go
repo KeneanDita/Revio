@@ -29,7 +29,7 @@ type Review struct {
 	CreatedAt       time.Time   `json:"created_at"`
 	UpdatedAt       time.Time   `json:"updated_at"`
 
-	PullRequest PullRequest `gorm:"foreignKey:PRID" json:"-"`
+	PullRequest PullRequest `gorm:"foreignKey:PRID" json:"-"` // intentionally hidden — avoids circular nesting
 }
 
 func (r *Review) BeforeCreate(tx *gorm.DB) error {

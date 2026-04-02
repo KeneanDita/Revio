@@ -53,7 +53,7 @@ export interface PullRequest {
   github_updated_at: string;
   created_at: string;
   updated_at: string;
-  Repo?: Repository;
+  repo?: Repository;
   reviews?: Review[];
 }
 
