@@ -105,14 +105,16 @@ export default function AnalyticsPage() {
           )}
 
           <Select
-            value={filters.repo_id ?? ""}
-            onValueChange={(v) => setFilters((f) => ({ ...f, repo_id: v }))}
+            value={filters.repo_id || "all"}
+            onValueChange={(v) =>
+              setFilters((f) => ({ ...f, repo_id: v === "all" ? "" : v }))
+            }
           >
             <SelectTrigger className="w-52">
               <SelectValue placeholder="All repositories" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All repositories</SelectItem>
+              <SelectItem value="all">All repositories</SelectItem>
               {repos?.repositories?.map((r) => (
                 <SelectItem key={r.id} value={r.id}>
                   {r.full_name}
