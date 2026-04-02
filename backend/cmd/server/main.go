@@ -24,8 +24,8 @@ func main() {
 		log.Fatalf("failed to connect to database: %v", err)
 	}
 
-	if err := database.AutoMigrate(db); err != nil {
-		log.Fatalf("failed to run migrations: %v", err)
+	if err := database.VerifySchema(db); err != nil {
+		log.Fatalf("schema verification failed: %v", err)
 	}
 
 	if cfg.IsProduction() {

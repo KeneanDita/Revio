@@ -1,11 +1,10 @@
 package database
 
 import (
-	"log"
+	"fmt"
 	"time"
 
 	"github.com/revio/backend/internal/config"
-	"github.com/revio/backend/internal/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -42,14 +41,22 @@ func Connect(cfg *config.Config) (*gorm.DB, error) {
 	return db, nil
 }
 
-func AutoMigrate(db *gorm.DB) error {
-	log.Println("Running database auto-migration...")
-	return db.AutoMigrate(
-		&models.User{},
-		&models.Repository{},
-		&models.PullRequest{},
-		&models.Review{},
-		&models.Notification{},
-		&models.SyncJob{},
-	)
+// VerifySchema checks that the required tables exist.
+// Schema is managed via backend/migrations/001_initial.sql — not GORM AutoMigrate.
+func VerifySchema(db *gorm.DB) error {
+	required := []string{"users", "repositories", "pull_requests", "reviews", "notifications", "sync_jobs"}
+	for _, table := range required {
+		var count int64
+		row := db.Raw(
+			"SELECT count(*) FROM information_schema.tables WHERE table_schema = 'public' AND table_name = ?",
+			table,
+		).Row()
+		if err := row.Scan(&count); err != nil {
+			return fmt.Errorf("schema check failed for table %q: %w", table, err)
+		}
+		if count == 0 {
+			return fmt.Errorf("required table %q not found — run: psql -h localhost -U postgres -d revio -f backend/migrations/001_initial.sql", table)
+		}
+	}
+	return nil
 }
